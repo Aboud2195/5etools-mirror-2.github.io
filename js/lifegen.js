@@ -317,8 +317,9 @@ const LIFE_EVENTS_AGE = [
 
 async function _pLifeEvtResult (title, rollResult) {
 	const out = {
-		result: `${title}: ${rollResult.result}`,
+		result: rollResult.result,
 	};
+	
 	if (rollResult.pNextRoll) out.nextRoll = await rollResult.pNextRoll;
 	return out;
 }
@@ -838,7 +839,7 @@ function sectClassTraining () {
 }
 
 // LIFE EVENTS
-function sectLifeEvents () {
+async function sectLifeEvents () {
 	const $events = $(`#events`).empty();
 	marriageIndex = 0;
 	const age = GenUtil.getFromTable(LIFE_EVENTS_AGE, Number($selAge.val()) || RNG(100));
@@ -863,18 +864,19 @@ function sectLifeEvents () {
 			return recurseNextRolls(evt.nextRoll);
 		};
 
-		const doRollAndDisplay = ({isScrollIntoView = false} = {}) => {
-			const evt = GenUtil.getFromTable(LIFE_EVENTS, RNG(100));
+		const doRollAndDisplay = async ({isScrollIntoView = false} = {}) => {
+			let evt =  GenUtil.getFromTable(LIFE_EVENTS, RNG(100));
+			evt = await _pLifeEvtResult(evt.result, evt);
 			$dispResult.html(evt.result);
 			$dispNextRoll.empty();
 			recurseNextRolls(evt);
 			if (isScrollIntoView) $wrpEvent[0].scrollIntoView({block: "nearest", inline: "nearest"});
 		};
 
-		doRollAndDisplay();
+		await doRollAndDisplay();
 
 		const $btnReroll = $(`<button class="btn btn-default btn-xxs">Reroll</button>`)
-			.click(() => doRollAndDisplay({isScrollIntoView: true}));
+			.click(async () => await doRollAndDisplay({isScrollIntoView: true}));
 
 		const $wrpEvent = $$`<div class="ve-flex-col">
 			<div class="ve-flex-v-center mb-1 mt-2">
@@ -890,13 +892,19 @@ function sectLifeEvents () {
 async function pRoll () {
 	$(`.life__output`).removeClass("ve-hidden");
 
+	RollerUtil.clearSeeds();
+	ptrParentLastName = {};
+	if($(`#name`).val().trim()) {
+		globalThis.RollerUtil.setSeed($(`#name`).val().trim());
+	}
+
 	await pSectParents();
 	sectBirthplace();
 	await pSectSiblings();
 	sectFamily();
 	sectPersonalDecisions();
 	sectClassTraining();
-	sectLifeEvents();
+	await sectLifeEvents();
 }
 
 window.addEventListener("load", async () => {
