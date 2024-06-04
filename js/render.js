@@ -5395,6 +5395,10 @@ Renderer.feat = class {
 	}
 };
 
+Renderer.tools = class {
+
+};
+
 Renderer.class = class {
 	static getCompactRenderedString (cls) {
 		if (cls.__prop === "subclass") return Renderer.subclass.getCompactRenderedString(cls);

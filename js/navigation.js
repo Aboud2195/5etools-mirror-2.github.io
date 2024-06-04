@@ -68,6 +68,7 @@ class NavBar {
 
 		this._addElement_dropdown(null, NavBar._CAT_DUNGEON_MASTER);
 		this._addElement_li(NavBar._CAT_DUNGEON_MASTER, "dmscreen.html", "DM Screen");
+		this._addElement_li(NavBar._CAT_DUNGEON_MASTER, "dmtools.html", "DM Tools");
 		this._addElement_divider(NavBar._CAT_DUNGEON_MASTER);
 		this._addElement_dropdown(NavBar._CAT_DUNGEON_MASTER, NavBar._CAT_ADVENTURES, {isSide: true, page: "adventures.html"});
 		this._addElement_li(NavBar._CAT_ADVENTURES, "adventures.html", "View All/Homebrew");

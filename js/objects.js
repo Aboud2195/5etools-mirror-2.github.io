@@ -49,8 +49,12 @@ class ObjectsPage extends ListPage {
 	constructor () {
 		const pageFilter = new PageFilterObjects();
 		const pFnGetFluff = Renderer.object.pGetFluff.bind(Renderer.object);
+		
+			
+		console.log(DataUtil.object.loadJSON.bind(DataUtil.object)());
 
 		super({
+
 			dataSource: DataUtil.object.loadJSON.bind(DataUtil.object),
 
 			pFnGetFluff,
